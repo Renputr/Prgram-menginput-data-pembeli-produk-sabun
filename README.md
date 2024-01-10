@@ -1,0 +1,110 @@
+.MODEL SMALL
+.CODE
+ORG 100h
+Data:
+    jmp Proses
+    clover db    '|===============================|', 13,10  
+        db       '|          Sabun muka           |', 13,10
+        db       '|===============================|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   NO    |Merek sabun|Harga/pcs|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   01    |Dettol     |RP 50.000|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   02    |Dove       |RP 37.000|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   03    |Nuvo Family|RP 25.909|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   04    |LIFBUOY    |RP 32.000|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '|   05    |Harmony    |RP 10.500|', 13,10
+        db       '+---------+-----------+---------+', 13,10
+        db       '        $'
+                                        
+nama   db 13,10, 'Nama pembeli : $'
+alamat db 13,10, 'Masukkan alamat : $'
+sabun  db 13,10, 'NO WA : $'
+pcs    db 13,10, 'Merek sabun yang ingin dibeli : $'
+merek  db 13,10, 'Jumlah pcs : $'
+sepasi db 13,10, '                     $'
+tampung_nama  db 30,?,30 dup (?)
+tampung_alamat db 13,?,13 dup (?)
+tampung_sabun   db 13,?,13 dup (?) 
+tampung_pcs   db 13,?,13 dup (?) 
+tampung_merek   db 13,?,13 dup (?) 
+
+
+success   db 13,10, '>>inputan anda berhasil di proses $'
+akhiri    db 13,10, 'Trimakasih telah berkunjung di aplikasi ini :)!!$'
+ 
+
+
+Proses:
+    MOV AH,09h	; Nilai servis untuk mencetak karakter
+    MOV AL,' '	; AL = Karakter yang akan dicetak
+    MOV BH,00h	; Nomor Halaman layar
+    MOV BL,0Ah	; Warna atau atribut dari karakter
+    MOV CX,10000	; Banyaknya karakter yang ingin dicetak
+    INT 10h		; Laksanakan!!!
+    
+    LEA DX,clover	; Mengambil Variable text
+    INT 21h		; Mencetak Variable text
+    
+mulai:
+    mov ah,09h
+    lea dx,nama
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_nama
+    int 21h
+    push dx
+
+    mov ah,09h
+    lea dx,alamat
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_alamat
+    int 21h
+    push dx
+
+    mov ah,09h
+    lea dx,sabun
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_sabun
+    int 21h
+    push dx
+    
+    mov ah,09h
+    lea dx,pcs
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_pcs
+    int 21h
+    push dx
+    
+    mov ah,09h
+    lea dx,merek
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_merek
+    int 21h
+    push dx
+    
+    mov ah,09h
+    lea dx,sepasi
+    int 21h
+    
+    
+    mov ah,09h
+    lea dx,success
+    int 21h
+    
+    mov ah,09h
+    lea dx,akhiri
+    int 21h
+    
+
+Done:
+    INT 20h		; Selesai! kembali ke DOS
+END Proses
