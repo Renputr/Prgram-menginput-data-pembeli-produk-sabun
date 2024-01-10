@@ -7,31 +7,35 @@ Data:
         db       '|          Sabun muka           |', 13,10
         db       '|===============================|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   Kode  |Merek sabun|Harga/pcs|', 13,10
+        db       '|   NO    |Merek sabun|Harga/pcs|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   06    |Dettol     |RP 50.000|', 13,10
+        db       '|   01    |Dettol     |RP 50.000|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   07    |Dove       |RP 37.000|', 13,10
+        db       '|   02    |Dove       |RP 37.000|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   08    |Nuvo Family|RP 25.909|', 13,10
+        db       '|   03    |Nuvo Family|RP 25.909|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   09    |LIFBUOY    |RP 32.000|', 13,10
+        db       '|   04    |LIFBUOY    |RP 32.000|', 13,10
         db       '+---------+-----------+---------+', 13,10
-        db       '|   10    |Harmony    |RP 10.500|', 13,10
+        db       '|   05    |Harmony    |RP 10.500|', 13,10
         db       '+---------+-----------+---------+', 13,10
         db       '        $'
                                         
 nama   db 13,10, 'Nama pembeli : $'
-sabun  db 13,10, 'Kode sabun yang ingin dibeli : $'
-pcs    db 13,10, 'Jumlah pcs :$'
-lanjut db 13,10, 'Tekan Y untuk melanjutkan >>> $'
+alamat db 13,10, 'Masukkan alamat : $'
+sabun  db 13,10, 'NO WA : $'
+pcs    db 13,10, 'Merek sabun yang ingin dibeli : $'
+merek  db 13,10, 'Jumlah pcs : $'
+sepasi db 13,10, '                     $'
 tampung_nama  db 30,?,30 dup (?)
-tampung_sabun db 13,?,13 dup (?)
+tampung_alamat db 13,?,13 dup (?)
+tampung_sabun   db 13,?,13 dup (?) 
 tampung_pcs   db 13,?,13 dup (?) 
+tampung_merek   db 13,?,13 dup (?) 
 
-error     db 13,10, 'Kode yang anda Masukkan SALAH $'
-Pilih_ntr db 13,10, 'Silakan Masukkan kode Sabun yang ingin dibeli :$'
-success   db 13,10, 'Selamat anda berhasil $'
+
+success   db 13,10, '>>inputan anda berhasil di proses $'
+akhiri    db 13,10, 'Trimakasih telah berkunjung di aplikasi ini :)!!$'
  
 
 
@@ -56,13 +60,21 @@ mulai:
     push dx
 
     mov ah,09h
+    lea dx,alamat
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_alamat
+    int 21h
+    push dx
+
+    mov ah,09h
     lea dx,sabun
     int 21h
     mov ah,0ah
     lea dx,tampung_sabun
     int 21h
     push dx
-
+    
     mov ah,09h
     lea dx,pcs
     int 21h
@@ -70,89 +82,27 @@ mulai:
     lea dx,tampung_pcs
     int 21h
     push dx
-
-page1:
+    
+    mov ah,09h
+    lea dx,merek
+    int 21h
+    mov ah,0ah
+    lea dx,tampung_merek
+    int 21h
+    push dx
+    
+    mov ah,09h
+    lea dx,sepasi
+    int 21h
     
     
     mov ah,09h
-    mov dx,lanjut
+    lea dx,success
     int 21h
-    mov ah,01h
-    int 21h
-    cmp al, 'Y'
-    je page2
-    jne error_nsg
-
-page2:
     
     mov ah,09h
-    mov dx,lanjut
+    lea dx,akhiri
     int 21h
-    mov ah,01h
-    int 21h
-    cmp al, 'Y'
-    je proses
-    jmp error_nsg
-
-error_nsg:
-    mov ah,09h
-    mov dx,offset error
-    int 21h
-    ; Exit program
-    mov ah, 4Ch
-    int 21h
-
-
-    mov ah,09h                                                                  
-    mov dx,offset pilih_ntr
-    int 21h
-
-    mov ah,01h
-    int 21h
-    cmp al, '0'
-    jb error_nsg  ; Jika karakter bukan digit, error
-
-    mov bh, al ; Simpan kode sabun di register bh
-    mov ah,01h
-    int 21h
-    mov bl, al ; Simpan jumlah pcs di register bl
-    cmp bh,'0'
-    jl error_nsg
-
-    ; Handle proses sesuai pilihan
-    cmp bh, '1'
-    je hitung_garnier_men
-    cmp bh, '2'
-    je hitung_ponts_men
-    ; Tambahkan logika untuk pilihan lain jika diperlukan
-    ; ...
-
-    ; Exit program
-    mov ah, 4Ch
-    int 21h
-
-hitung_garnier_men:
-    ; Logika untuk menghitung pembelian sabun Garnier Men
-    ; Contoh: Harga Garnier Men = RP 40.000
-    mov ax, 40000 ; Harga Garnier Men
-    jmp hitung_total
-    ; ...
-
-hitung_ponts_men:
-    ; Logika untuk menghitung pembelian sabun Ponts Men
-    ; Contoh: Harga Ponts Men = RP 33.000
-    mov ax, 33000 ; Harga Ponts Men
-    jmp hitung_total
-    ; ...
-
-hitung_total:
-    ; Logika untuk menghitung total pembelian
-    ; ax = harga sabun
-    ; bx = jumlah pcs
-    imul bx ; ax * bx
-    ; ax sekarang berisi total pembelian
-    ; T  
-    
     
 
 Done:
